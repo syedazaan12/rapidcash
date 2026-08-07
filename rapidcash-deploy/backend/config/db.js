@@ -50,11 +50,6 @@ if (process.env.DATABASE_URL) {
   );
 } else {
   const storage = process.env.DB_STORAGE || path.join(__dirname, '..', 'data', 'rapidcash.sqlite');
-  const fs = require('fs');
-  const dir = path.dirname(path.resolve(storage));
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
   sequelize = new Sequelize({
     dialect: 'sqlite',
     storage,

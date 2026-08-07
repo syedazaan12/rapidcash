@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff Portal — RapidCash</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/contact.css">
+<style>
+  .admin-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 24px;
+  }
+  .admin-tabs {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+    border-bottom: 2px solid var(--gray-100);
+    padding-bottom: 8px;
+  }
+  .admin-tab {
+    background: none;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-600);
+    cursor: pointer;
+    padding: 10px 16px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+  .admin-tab:hover {
+    background: var(--gray-100);
+    color: var(--deep-blue);
+  }
+  .admin-tab.active {
+    background: var(--deep-blue);
+    color: var(--white);
+  }
+  .admin-panel {
+    display: none;
+  }
+  .admin-panel.active {
+    display: block;
+  }
+  
+  /* Stats Cards Grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--deep-blue);
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Table style */
+  .admin-table-card {
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .filter-bar {
+    padding: 20px 24px;
+    background: var(--gray-100);
+    border-bottom: 1px solid var(--gray-300);
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .filter-bar input, .filter-bar select {
+    padding: 10px 14px;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 14px;
+  }
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14.5px;
+  }
+  .admin-table th, .admin-table td {
+    padding: 16px 24px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .admin-table th {
+    background: var(--gray-100);
+    font-weight: 600;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+  }
+  .admin-table tbody tr:hover {
+    background: var(--gray-100);
+  }
+
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(11, 37, 69, 0.4);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  .modal-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    padding: 40px;
+    position: relative;
+  }
+  .modal-close {
+    position: absolute;
+    top: 24px; right: 24px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--gray-600);
+  }
+  .modal-close:hover { color: var(--deep-blue); }
+  
+  .detail-section {
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--gray-100);
+    padding-bottom: 20px;
+  }
+  .detail-section h4 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--deep-blue);
+    margin: 0 0 14px 0;
+  }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    font-size: 14px;
+  }
+  @media (max-width: 600px) {
+    .detail-grid { grid-template-columns: 1fr; }
+  }
+  .detail-item {
+    display: flex;
+    flex-direction: column;
+  }
+  .detail-lbl {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .detail-val {
+    font-weight: 500;
+    color: var(--gray-900);
+  }
+
+  .underwriting-panel {
+    background: var(--gray-100);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    margin-top: 24px;
+  }
+  .notes-area {
+    width: 100%;
+    height: 120px;
+    font-family: monospace;
+    font-size: 12.5px;
+    padding: 10px;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    background: #fafafa;
+    margin-bottom: 12px;
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="logo">Rapid<span>Cash</span> <span style="font-size: 12px; color: var(--gray-600); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-left: 8px;">Staff Portal</span></a>
+    <div class="nav-actions">
+      <a href="javascript:logout()" class="nav-login">Log Out</a>
+    </div>
+  </div>
+</nav>
+
+<div class="admin-container">
+  <header style="margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <div>
+      <h1 style="font-family: var(--font-display); font-size: 32px; color: var(--deep-blue); margin: 0;">Underwriting Dashboard</h1>
+      <p style="color: var(--gray-600); margin: 4px 0 0 0;" id="staff-welcome-lbl">Welcome, Underwriter</p>
+    </div>
+  </header>
+
+  <!-- TAB NAVIGATION -->
+  <div class="admin-tabs">
+    <button class="admin-tab active" id="tab-btn-applications" onclick="showPanel('applications')">Applications</button>
+    <button class="admin-tab" id="tab-btn-staff" onclick="showPanel('staff')" style="display: none;">Staff Accounts</button>
+    <button class="admin-tab" id="tab-btn-audit" onclick="showPanel('audit')" style="display: none;">Audit Logs</button>
+    <button class="admin-tab" id="tab-btn-messages" onclick="showPanel('messages')">Contact Messages</button>
+  </div>
+
+  <!-- STATUS ALERT BOX -->
+  <div id="admin-global-alert" class="form-status"></div>
+
+  <!-- PANEL 1: APPLICATIONS -->
+  <div class="admin-panel active" id="panel-applications">
+    <!-- STATS BLOCKS -->
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num" id="stat-today">0</div><div class="stat-label">Received Today</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-pending">0</div><div class="stat-label">Total Pending</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-docs">0</div><div class="stat-label">Docs Pending Review</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-approved">0</div><div class="stat-label">Total Approved</div></div>
+    </div>
+
+    <!-- APPLICATIONS TABLE -->
+    <div class="admin-table-card">
+      <div class="filter-bar">
+        <input type="text" id="app-search" placeholder="Search applicant name, city..." style="flex-grow: 1;" oninput="fetchApplicationsList()">
+        <select id="app-filter-status" onchange="fetchApplicationsList()">
+          <option value="">All Statuses</option>
+          <option value="received">Draft / Received</option>
+          <option value="verification">Verification</option>
+          <option value="processing">Processing</option>
+          <option value="underwriting">Underwriting</option>
+          <option value="additional_documents_required">Documents Required</option>
+          <option value="decision_pending">Decision Pending</option>
+          <option value="approved">Approved</option>
+          <option value="declined">Declined</option>
+          <option value="funded">Funded</option>
+        </select>
+        <button class="btn btn-outline" onclick="fetchApplicationsList()" style="padding: 10px 20px; font-size: 14px;">Refresh</button>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Applicant</th>
+            <th>Requested Amount</th>
+            <th>City/State</th>
+            <th>Status</th>
+            <th>Date Submitted</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="app-list-tbody">
+          <tr>
+            <td colspan="6" style="text-align: center; color: var(--gray-600);">Loading applications list...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PANEL 2: STAFF MANAGEMENT (ADMIN ONLY) -->
+  <div class="admin-panel" id="panel-staff">
+    <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 32px; align-items: start;">
+      <!-- Create Staff -->
+      <div class="form-card" style="padding: 32px;">
+        <h3>Create Staff Account</h3>
+        <p>Onboard new loan officers, underwriters, or administrators.</p>
+        <form id="create-staff-form" onsubmit="handleCreateStaff(event)">
+          <div class="form-row">
+            <div class="field">
+              <label for="staff-first">First Name</label>
+              <input type="text" id="staff-first" required>
+            </div>
+            <div class="field">
+              <label for="staff-last">Last Name</label>
+              <input type="text" id="staff-last" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="staff-email">Email Address</label>
+            <input type="email" id="staff-email" required>
+          </div>
+          <div class="field">
+            <label for="staff-role">System Role</label>
+            <select id="staff-role" required>
+              <option value="loan_officer">Loan Officer</option>
+              <option value="underwriter">Underwriter</option>
+              <option value="admin">Administrator</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="staff-pass">Temporary Password</label>
+            <input type="password" id="staff-pass" required placeholder="Minimum 10 characters">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Onboard Staff</button>
+        </form>
+      </div>
+
+      <!-- Staff Accounts List -->
+      <div class="admin-table-card">
+        <div class="filter-bar">
+          <strong style="color: var(--deep-blue);">Active Staff Members</strong>
+        </div>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Toggle</th>
+            </tr>
+          </thead>
+          <tbody id="staff-list-tbody">
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--gray-600);">Loading staff members...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: AUDIT LOGS (ADMIN ONLY) -->
+  <div class="admin-panel" id="panel-audit">
+    <div class="admin-table-card">
+      <div class="filter-bar">
+        <strong style="color: var(--deep-blue);">System Audit Trail</strong>
+        <button class="btn btn-outline" onclick="fetchAuditLogs()" style="padding: 8px 16px; font-size: 13px; margin-left: auto;">Refresh Logs</button>
+      </div>
+      <table class="admin-table" style="font-size: 13.5px;">
+        <thead>
+          <tr>
+            <th>Actor ID</th>
+            <th>Action</th>
+            <th>Target</th>
+            <th>IP Address</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody id="audit-list-tbody">
+          <tr>
+            <td colspan="5" style="text-align: center; color: var(--gray-600);">Loading audit logs...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PANEL 4: CONTACT MESSAGES -->
+  <div class="admin-panel" id="panel-messages">
+    <div class="admin-table-card">
+      <div class="filter-bar">
+        <strong style="color: var(--deep-blue);">Public Inquiries</strong>
+        <button class="btn btn-outline" onclick="fetchContactMessages()" style="padding: 8px 16px; font-size: 13px; margin-left: auto;">Refresh Messages</button>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>From</th>
+            <th>Email / Phone</th>
+            <th>Topic</th>
+            <th>Message</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="messages-list-tbody">
+          <tr>
+            <td colspan="5" style="text-align: center; color: var(--gray-600);">Loading inquiries...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- DETAIL MODAL: VIEW DETAILS & UNDERWRITING CODE -->
+<!-- ============================================== -->
+<div class="modal-overlay" id="app-detail-modal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h2 style="font-family: var(--font-display); font-size: 26px; color: var(--deep-blue); margin: 0 0 4px 0;" id="modal-title">Application Details</h2>
+    <p style="color: var(--gray-600); font-size: 14.5px; margin: 0 0 32px 0;">Review applicant details, manage files, risk metrics, and application status below.</p>
+    
+    <div id="modal-alert" class="form-status"></div>
+
+    <!-- Section 1: Personal -->
+    <div class="detail-section">
+      <h4>Applicant & Personal Details</h4>
+      <div class="detail-grid">
+        <div class="detail-item"><span class="detail-lbl">Full Name</span><span class="detail-val" id="det-fullname">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">Date of Birth</span><span class="detail-val" id="det-dob">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">SSN (Masked)</span><span class="detail-val" id="det-ssn">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">Phone Number</span><span class="detail-val" id="det-phone">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">Driver License / State</span><span class="detail-val" id="det-dl">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">Citizenship / Marital</span><span class="detail-val" id="det-citizen">-</span></div>
+      </div>
+    </div>
+
+    <!-- Section 2: Address -->
+    <div class="detail-section">
+      <h4>Residential Address</h4>
+      <div class="detail-grid">
+        <div class="detail-item"><span class="detail-lbl">Street Address</span><span class="detail-val" id="det-street">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">Unit / Apt</span><span class="detail-val" id="det-apt">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">City, State Zip</span><span class="detail-val" id="det-citystate">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">Rent / Own</span><span class="detail-val" id="det-rentown">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">Monthly Payment</span><span class="detail-val" id="det-housingpayment">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">Years at Address</span><span class="detail-val" id="det-yearsaddress">-</span></div>
+      </div>
+    </div>
+
+    <!-- Section 3: Employment -->
+    <div class="detail-section">
+      <h4>Employment & Financials</h4>
+      <div class="detail-grid">
+        <div class="detail-item"><span class="detail-lbl">Employer</span><span class="detail-val" id="det-employer">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">Occupation</span><span class="detail-val" id="det-occupation">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">Monthly Income</span><span class="detail-val" id="det-income">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">Status / Years</span><span class="detail-val" id="det-empstatus">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">Pay Frequency</span><span class="detail-val" id="det-payfreq">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">Employer Phone</span><span class="detail-val" id="det-empphone">-</span></div>
+      </div>
+    </div>
+
+    <!-- Section 4: Bank Details -->
+    <div class="detail-section">
+      <h4>Linked Bank Account</h4>
+      <div class="detail-grid">
+        <div class="detail-item"><span class="detail-lbl">Bank Name</span><span class="detail-val" id="det-bankname">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">Account Type</span><span class="detail-val" id="det-acctype">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">Account Number (Masked)</span><span class="detail-val" id="det-accnum">-</span></div>
+        <div class="detail-item"><span class="detail-lbl">Routing Number</span><span class="detail-val">Masked & Encrypted</span></div>
+        <div class="detail-item"><span class="detail-lbl">Direct Deposit Authorized</span><span class="detail-val" id="det-depositconsent">-</span></div>
+      </div>
+    </div>
+
+    <!-- Section 5: Documents -->
+    <div class="detail-section">
+      <h4>Verification Documents</h4>
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Filename</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="modal-docs-tbody">
+          <tr>
+            <td colspan="3" style="text-align: center; color: var(--gray-600);">No files uploaded.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Underwriting Controls Panel -->
+    <div class="underwriting-panel">
+      <h3 style="font-family: var(--font-display); font-size: 19px; color: var(--deep-blue); margin: 0 0 16px 0;">Underwriting Review Controls</h3>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+        <div class="field">
+          <label for="ctrl-risk-score">Internal Risk Score (0 - 100)</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="number" step="0.1" id="ctrl-risk-score" style="padding: 8px 12px; width: 100px;">
+            <button class="btn btn-outline" onclick="updateRiskScore()" style="padding: 8px 16px; font-size: 13px;">Save</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="ctrl-status">Update Application Status</label>
+          <select id="ctrl-status" onchange="updateApplicationStatus()" style="padding: 8px 12px;">
+            <option value="received">Draft / Received</option>
+            <option value="verification">Verification</option>
+            <option value="processing">Processing</option>
+            <option value="underwriting">Underwriting</option>
+            <option value="additional_documents_required">Documents Required</option>
+            <option value="decision_pending">Decision Pending</option>
+            <option value="approved">Approved</option>
+            <option value="declined">Declined</option>
+            <option value="funded">Funded</option>
+            <option value="closed">Closed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="ctrl-note">Append Internal Note</label>
+        <textarea id="ctrl-note" placeholder="Write internal verification notes..." style="width: 100%; height: 80px; padding: 10px; border: 1px solid var(--gray-300); border-radius: var(--radius-sm);"></textarea>
+        <button class="btn btn-primary" onclick="addInternalNote()" style="padding: 8px 16px; font-size: 13.5px; margin-top: 10px;">Append Note</button>
+      </div>
+
+      <div class="field" style="margin-top: 16px;">
+        <label>Internal Audit Note History</label>
+        <textarea id="ctrl-note-history" class="notes-area" readonly></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

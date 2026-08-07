@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Access Account — RapidCash</title>
+<meta name="description" content="Log in or create a secure account to apply for personal loans and upload documents.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/contact.css">
+<style>
+  .auth-container {
+    max-width: 480px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  .auth-card {
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    box-shadow: var(--shadow-md);
+  }
+  .auth-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--gray-100);
+    padding-bottom: 12px;
+  }
+  .auth-tab {
+    background: none;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-600);
+    cursor: pointer;
+    padding: 6px 12px;
+    position: relative;
+  }
+  .auth-tab.active {
+    color: var(--deep-blue);
+  }
+  .auth-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -13px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--deep-blue);
+  }
+  .auth-form-panel {
+    display: none;
+  }
+  .auth-form-panel.active {
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="logo">Rapid<span>Cash</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="personal-loans.html">Personal Loans</a></li>
+      <li><a href="how-it-works.html">How It Works</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="login.html" class="nav-login">Log In</a>
+      <a href="apply.html" class="btn btn-primary">Apply Now</a>
+    </div>
+  </div>
+</nav>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-toggle">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Log In</button>
+      <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- Feedback Status -->
+    <div id="auth-status" class="form-status"></div>
+
+    <!-- Login Panel -->
+    <div id="panel-login" class="auth-form-panel active">
+      <h3 style="font-family: var(--font-display); font-size: 24px; color: var(--deep-blue); margin: 0 0 8px 0;">Welcome Back</h3>
+      <p style="color: var(--gray-600); font-size: 14.5px; margin: 0 0 28px 0;">Log in to access your dashboard, resume your draft application, or check document statuses.</p>
+      
+      <form id="form-login" onsubmit="handleLoginSubmit(event)">
+        <div class="field">
+          <label for="login-email">Email Address</label>
+          <input type="email" id="login-email" required placeholder="name@domain.com">
+        </div>
+        <div class="field">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" required placeholder="••••••••••••">
+        </div>
+        <button type="submit" id="btn-login-submit" class="btn btn-primary btn-block" style="margin-top: 12px;">Access Account</button>
+      </form>
+    </div>
+
+    <!-- Register Panel -->
+    <div id="panel-register" class="auth-form-panel">
+      <h3 style="font-family: var(--font-display); font-size: 24px; color: var(--deep-blue); margin: 0 0 8px 0;">Create Account</h3>
+      <p style="color: var(--gray-600); font-size: 14.5px; margin: 0 0 28px 0;">Sign up to begin your secure application and explore custom personal loan packages.</p>
+      
+      <form id="form-register" onsubmit="handleRegisterSubmit(event)">
+        <div class="form-row">
+          <div class="field">
+            <label for="reg-firstname">First Name</label>
+            <input type="text" id="reg-firstname" required placeholder="John">
+          </div>
+          <div class="field">
+            <label for="reg-lastname">Last Name</label>
+            <input type="text" id="reg-lastname" required placeholder="Doe">
+          </div>
+        </div>
+        <div class="field">
+          <label for="reg-email">Email Address</label>
+          <input type="email" id="reg-email" required placeholder="john.doe@domain.com">
+        </div>
+        <div class="field">
+          <label for="reg-phone">Phone Number</label>
+          <input type="tel" id="reg-phone" placeholder="(555) 123-4567">
+        </div>
+        <div class="field">
+          <label for="reg-password">Password</label>
+          <input type="password" id="reg-password" required placeholder="At least 10 characters">
+          <div class="field-hint">Must contain at least 10 characters.</div>
+        </div>
+        <button type="submit" id="btn-register-submit" class="btn btn-primary btn-block" style="margin-top: 12px;">Create Account</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <a href="index.html" class="logo" style="color:#fff;">Rapid<span style="color:#c8a24d;">Cash</span></a>
+        <p style="margin-top:14px; max-width:280px; line-height:1.6;">A modern personal loan marketplace connecting qualified borrowers with trusted lending partners.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <a href="personal-loans.html">Personal Loans</a>
+        <a href="apply.html">Apply Now</a>
+        <a href="login.html">Applicant Login</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Cookie Policy</a>
+        <a href="#">Accessibility</a>
+        <a href="#">Licensing Information</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:support@rapidcash.example">support@rapidcash.example</a>
+        <a href="tel:+18005551234">1-800-555-1234</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 RapidCash. All rights reserved.</span>
+      <span>NMLS # placeholder — replace with real license numbers per state</span>
+    </div>
+    <p class="disclosure">RapidCash is a loan marketplace and does not make loan or credit decisions itself. RapidCash connects applicants with third-party lending partners; loan approval, rates, and terms are determined solely by the lending partner and vary based on creditworthiness and state law. Not all applicants will be approved. This is not an offer to lend. Replace this disclosure with language reviewed by your compliance counsel before launch.</p>
+  </div>
+</footer>
+
+<script src="js/auth.js"></script>
+</body>
+</html>

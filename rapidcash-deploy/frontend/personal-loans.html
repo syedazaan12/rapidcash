@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Loans — RapidCash</title>
+<meta name="description" content="Explore simple, secure personal loans. Calculate your monthly payment and find a term that fits your budget.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/contact.css">
+<style>
+  .calculator-card {
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    box-shadow: var(--shadow-md);
+  }
+  .calculator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 32px;
+  }
+  @media (max-width: 768px) {
+    .calculator-grid { grid-template-columns: 1fr; }
+  }
+  .calc-slider-group {
+    margin-bottom: 24px;
+  }
+  .calc-slider-group label {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 14.5px;
+    margin-bottom: 8px;
+  }
+  .calc-slider-group label span.val {
+    color: var(--gold);
+    font-family: var(--font-display);
+    font-size: 18px;
+  }
+  .calc-slider-group input[type="range"] {
+    width: 100%;
+    accent-color: var(--deep-blue);
+    height: 6px;
+    border-radius: 3px;
+    background: var(--gray-300);
+    outline: none;
+  }
+  .calc-results {
+    background: var(--gray-100);
+    border-radius: var(--radius-md);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .calc-payment-lbl {
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--gray-600);
+    margin-bottom: 8px;
+  }
+  .calc-payment-val {
+    font-family: var(--font-display);
+    font-size: 48px;
+    font-weight: 600;
+    color: var(--deep-blue);
+    margin-bottom: 16px;
+  }
+  .calc-details {
+    width: 100%;
+    border-top: 1px solid var(--gray-300);
+    padding-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13.5px;
+    color: var(--gray-600);
+  }
+  .calc-details strong {
+    color: var(--gray-900);
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="logo">Rapid<span>Cash</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="personal-loans.html">Personal Loans</a></li>
+      <li><a href="how-it-works.html">How It Works</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="login.html" class="nav-login">Log In</a>
+      <a href="apply.html" class="btn btn-primary">Apply Now</a>
+    </div>
+  </div>
+</nav>
+
+<header class="contact-hero">
+  <div class="container">
+    <div class="eyebrow">Product Options</div>
+    <h1>Flexible Personal Loans</h1>
+    <p>We believe in transparent terms, straightforward processes, and loans that are structured to help you succeed, not hold you back.</p>
+  </div>
+</header>
+
+<section class="section" style="padding-top: 0;">
+  <div class="container">
+    <div class="calculator-card">
+      <h2 style="font-family: var(--font-display); font-size: 28px; color: var(--deep-blue); margin: 0;">Calculate Your Payment</h2>
+      <p style="color: var(--gray-600); font-size: 15px; margin: 4px 0 0 0;">Drag the sliders below to estimate your monthly payments. Interest rates are illustrative and subject to credit approval.</p>
+      
+      <div class="calculator-grid">
+        <div>
+          <div class="calc-slider-group">
+            <label><span>Loan Amount</span> <span class="val" id="amount-val">$5,000</span></label>
+            <input type="range" id="amount-range" min="1000" max="50000" step="500" value="5000">
+          </div>
+          
+          <div class="calc-slider-group">
+            <label><span>Term Length</span> <span class="val" id="term-val">36 months</span></label>
+            <input type="range" id="term-range" min="12" max="72" step="12" value="36">
+          </div>
+
+          <div class="calc-slider-group">
+            <label><span>Estimated APR</span> <span class="val" id="apr-val">9.99%</span></label>
+            <input type="range" id="apr-range" min="5.99" max="29.99" step="0.25" value="9.99">
+          </div>
+        </div>
+
+        <div class="calc-results">
+          <div class="calc-payment-lbl">Estimated Monthly Payment</div>
+          <div class="calc-payment-val" id="monthly-payment">$161.34</div>
+          <div class="calc-details">
+            <span>Total Payback: <strong id="total-payback">$5,808.24</strong></span>
+            <span>Total Interest: <strong id="total-interest">$808.24</strong></span>
+          </div>
+          <a href="apply.html" class="btn btn-primary" style="margin-top: 24px; width: 100%;">Apply For This Loan</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">Lending Details</div>
+      <h2 class="section-title">Loan Options Crafted for Your Life</h2>
+      <p class="section-desc">Borrow securely with options that let you take control of your financial pathway.</p>
+    </div>
+    
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <h3>Debt Consolidation</h3>
+        <p>Combine multiple high-interest cards or bills into a single monthly payment with a fixed interest rate.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div>
+        <h3>Home Improvement</h3>
+        <p>Fund critical home renovations, repairs, or upgrades without having to tap into your home equity.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+        <h3>Major Purchases</h3>
+        <p>Pay for expected or unexpected life events, medical fees, travel, or large expenses with structured schedules.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <a href="index.html" class="logo" style="color:#fff;">Rapid<span style="color:#c8a24d;">Cash</span></a>
+        <p style="margin-top:14px; max-width:280px; line-height:1.6;">A modern personal loan marketplace connecting qualified borrowers with trusted lending partners.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <a href="personal-loans.html">Personal Loans</a>
+        <a href="apply.html">Apply Now</a>
+        <a href="login.html">Applicant Login</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Cookie Policy</a>
+        <a href="#">Accessibility</a>
+        <a href="#">Licensing Information</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:support@rapidcash.example">support@rapidcash.example</a>
+        <a href="tel:+18005551234">1-800-555-1234</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 RapidCash. All rights reserved.</span>
+      <span>NMLS # placeholder — replace with real license numbers per state</span>
+    </div>
+    <p class="disclosure">RapidCash is a loan marketplace and does not make loan or credit decisions itself. RapidCash connects applicants with third-party lending partners; loan approval, rates, and terms are determined solely by the lending partner and vary based on creditworthiness and state law. Not all applicants will be approved. This is not an offer to lend. Replace this disclosure with language reviewed by your compliance counsel before launch.</p>
+  </div>
+</footer>
+
+<div class="mobile-apply-bar">
+  <a href="apply.html" class="btn btn-primary btn-block">Apply Now</a>
+</div>
+
+<script>
+  const amountRange = document.getElementById('amount-range');
+  const termRange = document.getElementById('term-range');
+  const aprRange = document.getElementById('apr-range');
+
+  const amountVal = document.getElementById('amount-val');
+  const termVal = document.getElementById('term-val');
+  const aprVal = document.getElementById('apr-val');
+
+  const monthlyPayment = document.getElementById('monthly-payment');
+  const totalPayback = document.getElementById('total-payback');
+  const totalInterest = document.getElementById('total-interest');
+
+  function calculateLoan() {
+    const P = parseFloat(amountRange.value);
+    const n = parseInt(termRange.value);
+    const yearlyApr = parseFloat(aprRange.value);
+    
+    amountVal.textContent = `$${P.toLocaleString()}`;
+    termVal.textContent = `${n} months`;
+    aprVal.textContent = `${yearlyApr.toFixed(2)}%`;
+
+    const r = (yearlyApr / 100) / 12;
+    let monthly;
+    
+    if (r === 0) {
+      monthly = P / n;
+    } else {
+      monthly = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    }
+
+    const total = monthly * n;
+    const interest = total - P;
+
+    monthlyPayment.textContent = `$${monthly.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    totalPayback.textContent = `$${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    totalInterest.textContent = `$${interest.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+  }
+
+  amountRange.addEventListener('input', calculateLoan);
+  termRange.addEventListener('input', calculateLoan);
+  aprRange.addEventListener('input', calculateLoan);
+
+  calculateLoan();
+</script>
+</body>
+</html>
